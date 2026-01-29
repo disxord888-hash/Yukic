@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Patrick+Hand&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="desk">
+        <div class="notepad">
+            <div class="binding"></div>
+            <div class="paper" id="markdown-preview"></div>
+        </div>
+    </div>
+
+    <!-- 以下のタグの中に表示したいMarkdownテキストを書いてください -->
+    <script type="text/markdown" id="content">
+
+# 1 用途
+> 作業VCなどにいいかも
+> 暇な時にいいかも
+# 2 注意点
+> m!p で曲再生不可(人力です。)
+> ボカロ曲しかたいていは流しません
+> リクエストにはほとんどお答えしません。
+> 回線が悪い時がたまにあります。
+# 3 現在のプレイリスト
+> Youtubeからソースを引用
+# メンテナンス状況
+##### 解決済み:🟩
+##### 解決中:💦
+##### 問題詮索中:⚠️
+##### 取り掛かっていない:🛑
+> ## 🟩一時停止中(2026-01-28 20:32)
+> - 理由 リピートし忘れ どちらかというと都合上
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
