@@ -42,8 +42,8 @@ body {
 
 .notepad {
     position: relative;
-    width: 90%;
-    max-width: 600px;
+    width: 100%;
+    max-width: none;
     min-height: 12000vh;
     /* Make it extremely long per user request (100x) */
     background: var(--paper-bg);
@@ -159,6 +159,26 @@ body {
     border-radius: 4px;
     font-family: monospace;
     font-size: 0.9em;
+}
+
+/* Table Styles */
+.paper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.paper th,
+.paper td {
+    border: 1px solid var(--text-color);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.paper th {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Light background for headers */
+    font-weight: 600;
 }
 
 /* Custom Scrollbar - removed strict targeting since paper no longer scrolls */
