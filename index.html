@@ -4,71 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
+    <title>Scoreboard / Timer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Patrick+Hand&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Roboto+Mono:wght@500;700&display=swap"
         rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <div class="desk">
-        <div class="notepad">
-            <div class="binding"></div>
-            <div class="paper" id="markdown-preview"></div>
-        </div>
+<body class="theme-dark">
+    <div id="app">
+        <!-- Settings / Header -->
+        <header class="controls-header">
+            <div class="logo">SCOREBOARD</div>
+            <div class="settings-group">
+                <button id="toggle-sound" class="icon-btn" aria-label="Toggle Sound" title="効果音 ON/OFF">
+                    <span class="icon">🔊</span>
+                </button>
+                <button id="toggle-theme" class="icon-btn" aria-label="Toggle Theme" title="ダーク/ライトモード切替">
+                    <span class="icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Display -->
+        <main class="main-display">
+            <!-- Timer Display (Global) -->
+            <div class="timer-container" id="timer-container">
+                <div class="timer-mode-toggle">
+                    <button id="mode-up" class="mode-btn active">カウントアップ</button>
+                    <button id="mode-down" class="mode-btn">カウントダウン</button>
+                </div>
+                <div id="timer-display" class="timer-display">00:00.0</div>
+
+                <!-- Settings Area (Dynamic based on mode) -->
+                <div class="timer-settings" id="timer-settings">
+                    <div id="setting-uptimer" class="setting-group">
+                        <label for="notify-interval-up">通知間隔(秒):</label>
+                        <input type="number" id="notify-interval-up" placeholder="30" min="0.1" step="0.1" value="30">
+                    </div>
+                    <div id="setting-downtimer" class="setting-group" style="display:none;">
+                        <label>制限時間:</label>
+                        <div class="time-input-group">
+                            <input type="number" id="timer-hours" placeholder="0" min="0" value="0" class="time-input">
+                            <span class="time-label">時間</span>
+                            <input type="number" id="timer-minutes" placeholder="3" min="0" max="59" value="3"
+                                class="time-input">
+                            <span class="time-label">分</span>
+                            <input type="number" id="timer-seconds" placeholder="0" min="0" max="59" value="0"
+                                class="time-input">
+                            <span class="time-label">秒</span>
+                        </div>
+                        <span class="divider">|</span>
+                        <label for="notify-interval-down">通知間隔(秒):</label>
+                        <input type="number" id="notify-interval-down" placeholder="なし" min="0.1" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contextual Info / Notification Text -->
+            <div id="notification-area" class="notification-area"></div>
+
+            <!-- Players Grid -->
+            <div id="players-grid" class="players-grid">
+                <!-- Player Card Template (JS will populate this) -->
+            </div>
+
+            <!-- Add Player Button -->
+            <div class="player-controls">
+                <button id="btn-add-player" class="btn btn-outline" title="プレイヤーを追加">
+                    <span>+ プレイヤー追加</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer Controls -->
+        <footer class="controls-footer">
+            <div class="footer-buttons">
+                <button id="btn-start" class="btn btn-primary" title="スタート">▶</button>
+                <button id="btn-stop" class="btn btn-secondary" disabled title="ストップ">❙❙</button>
+                <button id="btn-reset" class="btn btn-danger" title="リセット">RESET</button>
+            </div>
+
+            <!-- Phase Display (Moved to Footer) -->
+            <div class="phase-container">
+                <button id="phase-prev" class="phase-btn">◀</button>
+                <div id="phase-display" contenteditable="true" spellcheck="false">第1回戦</div>
+                <button id="phase-next" class="phase-btn">▶</button>
+            </div>
+        </footer>
     </div>
-
-    <!-- 以下のタグの中に表示したいMarkdownテキストを書いてください -->
-    <script type="text/markdown" id="content">
-
->##### 再読み込み・閲覧データの消去を都度してください。  
->##### でないとまれにページが再読み込みされません。
->
->> ##### ページ：https://github.com/disxord888-hash/Yukic
-|機能|コマンド(人力により、0:00~10:00までは<br>だいたい反応できない<br>コマンドの時@メンションしてください。<br>コピペ用 yukic_music)|
-|---|---|        
-|Play(再生)|yk! p |
-|Stop(停止)|yk! s|
-|Next(次の曲)|yk! n|
-|Loop(ループ再生)|yk! lp(単体)<br>yk! lpq(再生リストをループ)|
-|Volume(音量)|yk! v|
-        
-# **≪𝕐𝕦𝕜𝕚𝕔 : 爆≫**
-# メンテナンス状況
-
-
-**<span style="color: #c1ffc1;background-color: black ">解決済み</span>**
-**<span style="color: #c1c1ff;background-color: black ">解決中</span>**
-**<span style="color: #ffe0c1;background-color: black ">問題詮索中</span>**
-**<span style="color: #ffc1c1;background-color: gray ">取り掛かっていない</span>**
-**<span style="color: #660000;background-color: gray ">アカウント凍結、BAN等</span>**
-**<span style="color: #ffff00;background-color: black ">お知らせ</span>**
-|解決状況|メンテナンス|時間|理由|概要|
-|---|---|---|---|---|
-|**<span style="color: #c1ffc1;background-color: black ">解決済み</span>**|一時停止|2026-01-28 <br> 20:32|リピートし忘れ|どちらかというと <br> 都合上
-|**<span style="color: #660000;background-color: gray ">アカウント凍結</span>**|(本アカでの凍結ですので <br> 画面共有、音楽などに <br> 影響はありません。)|2026/01/31 <br> 7:42|自●を促す名前|02/01まで凍結|
-|**<span style="color: black ;background-color: #ffff00 ">お知らせ</span>**|本アカ対応ができません。|2026/01/31 <br> 7:49|上記|02/01まで|
-# 1 用途
-> 作業VCなどにいいかも  
-> 暇な時にいいかも
-# 2 注意点
-> m!p で曲再生不可(人力です。)  
-> ボカロ曲しかたいていは流しません  
-> リクエストにはほとんどお答えしません。  
-> 回線が悪い時がたまにあります。
-# 3 現在のプレイリスト
-> Youtubeからソースを引用  
-> たまにソフトウェアから引用
-    </script>
     <script src="script.js"></script>
 </body>
 
-
 </html>
-
-
-

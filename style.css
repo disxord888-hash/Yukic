@@ -1,216 +1,495 @@
 :root {
-    --paper-bg: #fffcf5;
-    --paper-line: #a4b0be;
-    --paper-line-margin: #ff6b6b;
-    --text-color: #2f3542;
-    --desk-bg: #2d3436;
-    --binding-color: #2f3542;
+    /* Dark Theme (Default) */
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --panel-bg: rgba(255, 255, 255, 0.05);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --accent-color: #3b82f6;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --input-bg: transparent;
+    --border-color: rgba(255, 255, 255, 0.1);
+
+    --font-heading: 'Inter', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+}
+
+body.theme-light {
+    --bg-color: #f3f4f6;
+    --text-color: #111827;
+    --panel-bg: rgba(0, 0, 0, 0.05);
+    --card-bg: #ffffff;
+    --accent-color: #2563eb;
+    --input-bg: transparent;
+    --border-color: rgba(0, 0, 0, 0.1);
 }
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--desk-bg);
-    /* Wood texture effect using gradients */
-    background-image:
-        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 8px),
-        linear-gradient(to bottom, #4b4b4b, #2d3436);
-    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-heading);
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#app {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    /* Changed from center to allow scrolling from top */
-    font-family: 'Klee One', 'Patrick Hand', sans-serif;
-    overflow-y: auto;
-    /* Allow scrolling */
-    padding: 50px 0;
-    /* Add padding for scroll space */
-}
-
-.desk {
-    perspective: 1000px;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.notepad {
-    position: relative;
-    width: 100%;
-    max-width: none;
-    min-height: 12000vh;
-    /* Make it extremely long per user request (100x) */
-    background: var(--paper-bg);
-    border-radius: 4px;
-    box-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.15),
-        0 10px 0 -5px #eee,
-        0 10px 1px -4px rgba(0, 0, 0, 0.15),
-        0 20px 0 -10px #eee,
-        0 20px 1px -9px rgba(0, 0, 0, 0.15),
-        5px 30px 20px rgba(0, 0, 0, 0.4);
-    /* transform: rotate(-1deg); Removed rotation */
-    /* transition: transform 0.3s ease; Removed transition */
-    margin-bottom: 50px;
-}
-
-/* Removed hover effect
-.notepad:hover {
-    transform: rotate(0deg) scale(1.01);
-}
-*/
-
-/* Spiral binding implementation */
-.binding {
-    position: absolute;
-    top: -15px;
-    left: 20px;
-    right: 20px;
-    height: 30px;
-    display: flex;
-    justify-content: space-evenly;
-    z-index: 10;
-    pointer-events: none;
-}
-
-.binding::after {
-    content: '';
-    display: block;
-    width: 100%;
+    flex-direction: column;
     height: 100%;
-    /* Creating spirals with radial gradient repeating */
-    background: repeating-linear-gradient(90deg,
-            transparent 0,
-            transparent 38px,
-            #333 38px,
-            #333 42px,
-            transparent 42px,
-            transparent 60px);
+    padding: 1rem 2rem;
+    position: relative;
+}
+
+/* Header */
+.controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 1rem;
+    opacity: 0.5;
+    letter-spacing: 0.1em;
+}
+
+.settings-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+/* Main Display */
+.main-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-y: auto;
+    padding-bottom: 1rem;
+}
+
+/* Timer Section */
+.timer-container {
+    background: var(--panel-bg);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.timer-mode-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border-radius: 999px;
+}
+
+.mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.2s;
+}
+
+.mode-btn.active {
+    background: var(--accent-color);
+    color: white;
+    opacity: 1;
+    font-weight: bold;
+}
+
+.timer-display {
+    font-family: var(--font-mono);
+    font-size: clamp(3rem, 10vw, 6rem);
+    line-height: 1;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+    cursor: default;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.timer-settings {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
     opacity: 0.8;
 }
 
-.paper {
+.setting-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.timer-settings input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 4px;
+    padding: 2px 5px;
+    width: 70px;
+    text-align: center;
+    font-family: var(--font-mono);
+}
+
+.divider {
+    opacity: 0.3;
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.time-input {
+    width: 50px !important;
+}
+
+.time-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-right: 0.5rem;
+}
+
+/* Notifications */
+.notification-area {
+    height: 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--warning-color);
+    text-align: center;
+    opacity: 0;
+    margin-bottom: 1rem;
+    transition: opacity 0.3s;
+    flex-shrink: 0;
+}
+
+/* Players Grid */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
     width: 100%;
-    height: 100%;
-    padding: 60px 40px 40px 40px;
+    margin-bottom: 1rem;
+}
+
+.player-card {
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.btn-remove-player {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.2;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.btn-remove-player:hover {
+    opacity: 1;
+    color: var(--danger-color);
+}
+
+.player-name-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--text-color);
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    width: 80%;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-bottom 0.2s;
+}
+
+.player-name-input:focus {
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.score-control {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.score-display {
+    font-family: var(--font-mono);
+    font-size: 4rem;
+    font-weight: 700;
+    min-width: 3ch;
+    text-align: center;
+}
+
+.score-btn {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: transparent;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.score-btn:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
+}
+
+.score-btn.plus {
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.score-btn.plus:hover {
+    background: var(--success-color);
+    color: white;
+}
+
+.score-btn.minus {
+    border-color: var(--text-color);
+    opacity: 0.5;
+}
+
+.score-btn.minus:hover {
+    opacity: 1;
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Footer Controls */
+.controls-footer {
+    display: flex;
+    justify-content: space-between;
+    /* Space between buttons(L) and Phase(R) */
+    align-items: center;
+    padding-top: 1rem;
+    flex-shrink: 0;
+    width: 100%;
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+    gap: 1rem;
+}
+
+.footer-buttons {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.btn {
+    border: none;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s, background-color 0.2s;
+    font-family: var(--font-heading);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #16a34a;
+}
+
+.btn-secondary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+.btn-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    box-shadow: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px dashed var(--text-color);
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.btn-outline:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Phase Display - Relocated to Flow */
+.phase-container {
+    background: var(--panel-bg);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* No fixed positioning */
+}
+
+#phase-display {
+    font-size: 2rem;
+    font-weight: 900;
     color: var(--text-color);
     outline: none;
-    resize: none;
-    /* overflow-y: auto; Removed to allow full page scroll */
-
-    /* Paper Lines Removed - Plain background */
-    background-image: none;
-    background-attachment: local;
-
-    /* Font Size Adjustment */
-    font-size: 1.0rem;
-    /* Hand-written typical size */
-    line-height: 2rem;
-    /* Keep line-height to match grid */
+    cursor: text;
+    text-align: center;
+    min-width: 150px;
 }
 
-/* Markdown Styles */
-.paper h1,
-.paper h2,
-.paper h3 {
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+#phase-display:focus {
+    color: var(--accent-color);
+}
+
+.phase-btn {
+    background: none;
+    border: none;
     color: var(--text-color);
-}
-
-.paper h1 {
-    font-size: 1.4rem;
-    border-bottom: 2px solid var(--text-color);
-}
-
-.paper h2 {
-    font-size: 1.2rem;
-    border-bottom: 1px dashed var(--text-color);
-}
-
-.paper ul,
-.paper ol {
-    margin-left: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.paper p {
-    margin-bottom: 0;
-    /* Let line-height handle spacing */
-}
-
-.paper blockquote {
-    border-left: 4px solid var(--paper-line-margin);
-    padding-left: 1rem;
-    color: #555;
-    font-style: italic;
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.paper code {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.9em;
-}
-
-/* Table Styles */
-.paper table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-}
-
-.paper th,
-.paper td {
-    border: 1px solid var(--text-color);
-    padding: 0.5rem;
-    text-align: left;
-}
-
-.paper th {
-    background-color: rgba(0, 0, 0, 0.05);
-    /* Light background for headers */
-    font-weight: 600;
-}
-
-/* Custom Scrollbar - removed strict targeting since paper no longer scrolls */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 0 0.5rem;
     border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+.phase-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-/* Mobile Responsiveness */
+/* Mobile Adjustments */
 @media (max-width: 600px) {
-    .notepad {
-        width: 95%;
-        min-height: 100vh;
+    #phase-display {
+        font-size: 1.4rem;
+        min-width: 100px;
     }
 
-    .paper {
-        font-size: 0.9rem;
-        line-height: 2rem;
-        padding: 60px 20px 20px 20px;
-        background-image:
-            repeating-linear-gradient(transparent 0, transparent 31px, var(--paper-line) 31px, var(--paper-line) 32px);
+    .controls-footer {
+        flex-direction: column-reverse;
+        /* Stack: Buttons Bottom, Phase Top? Or Buttons Top? 
+                                           Usually buttons at bottom is easiest for thumbs. 
+                                           But Phase above buttons prevents overlap. */
+        align-items: flex-start;
+        /* Left align everything */
+        gap: 1rem;
+    }
+
+    .footer-buttons {
+        width: 100%;
+        justify-content: space-between;
+        /* Spread buttons */
+    }
+
+    .phase-container {
+        align-self: flex-end;
+        /* Push Phase to right? Or ensure it doesn't overlap? 
+                                 If flex-direction is column-reverse, Buttons are Bottom. Phase is Top. 
+                                 User worried about Overlap Reset(L) and Phase(R).
+                                 If stacked, no overlap. */
+        width: auto;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        /* Make clickable area good */
+        flex: 1;
+        /* Stretch buttons? */
     }
 }
